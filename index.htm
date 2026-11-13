@@ -1,0 +1,1173 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard INMAP 2026</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Inter & Plus Jakarta Sans -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@500;700;800&display=swap" rel="stylesheet">
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            letter-spacing: -0.01em;
+        }
+        
+        p, span, li, a, input, textarea {
+            font-family: 'Inter', sans-serif;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            letter-spacing: -0.02em;
+        }
+
+        .nav-item {
+            transition: all 0.3s ease;
+            color: #cbd5e1;
+        }
+        .nav-item:hover {
+            color: #fbbf24; 
+            background-color: rgba(168, 85, 247, 0.2); 
+            transform: translateY(-2px);
+        }
+        .nav-item i {
+            transition: transform 0.3s ease;
+        }
+        .nav-item:hover i {
+            transform: scale(1.15);
+        }
+        
+        .nav-active {
+            color: #fbbf24 !important;
+            background-color: rgba(168, 85, 247, 0.3) !important;
+            border-bottom: 3px solid #fbbf24;
+        }
+        .nav-active i {
+            transform: scale(1.1);
+        }
+
+        .lomba-card {
+            transition: all 0.3s ease;
+        }
+        .lomba-card:hover {
+            transform: translateY(-4px);
+            border-color: #a855f7;
+            box-shadow: 0 10px 15px -3px rgba(168, 85, 247, 0.15);
+        }
+
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .tab-content {
+            display: none; 
+            animation: fadeIn 0.3s ease-out forwards;
+        }
+        .tab-content.active {
+            display: block; 
+        }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800 flex flex-col min-h-screen">
+
+    <!-- Header Hitam Bermotif Ungu (Sticky, Satu Baris Saja) -->
+    <header class="bg-gradient-to-r from-black via-purple-950 to-slate-950 border-b border-purple-900/60 shadow-xl fixed w-full top-0 z-50 text-white relative overflow-hidden">
+        
+        <!-- Overlay Motif Batik Geblek Renteng & Manggis Purworejo -->
+        <div class="absolute inset-0 opacity-15 pointer-events-none">
+            <svg class="w-full h-full" xmlns="http://www.w3.org/2000/svg" width="120" height="120" viewBox="0 0 120 120">
+                <pattern id="motif-header-purworejo" x="0" y="0" width="80" height="80" patternUnits="userSpaceOnUse">
+                    <path d="M 40 10 C 24 10 24 38 40 38 C 56 38 56 66 40 66 C 24 66 24 38 40 38 C 56 38 56 10 40 10 Z" fill="none" stroke="#d8b4fe" stroke-width="2"/>
+                    <circle cx="40" cy="24" r="4" fill="#fbbf24"/>
+                    <circle cx="40" cy="52" r="4" fill="#fbbf24"/>
+                    <path d="M 15 40 Q 5 32 15 24 Q 25 32 15 40 Z" fill="#c084fc" opacity="0.7"/>
+                    <path d="M 65 40 Q 55 32 65 24 Q 75 32 65 40 Z" fill="#c084fc" opacity="0.7"/>
+                    <circle cx="15" cy="32" r="2" fill="#fbbf24"/>
+                    <circle cx="65" cy="32" r="2" fill="#fbbf24"/>
+                </pattern>
+                <rect width="100%" height="100%" fill="url(#motif-header-purworejo)"/>
+            </svg>
+        </div>
+
+        <!-- Baris Navigasi Tab Utama & Logo -->
+        <div class="container mx-auto px-2 py-2 overflow-x-auto hide-scrollbar relative z-10">
+            <ul class="flex justify-start items-center space-x-1 min-w-max">
+                
+                <!-- Logo & Teks (Tepat sebelum tombol Home) -->
+                <li class="flex items-center gap-2 pr-4 mr-2 border-r border-purple-800/60 flex-shrink-0 cursor-pointer" onclick="switchTab('home')">
+                    <div class="bg-purple-900 text-amber-400 p-1.5 rounded-lg shadow-sm border border-purple-700 flex items-center justify-center">
+                        <i class="fas fa-mosque text-lg"></i>
+                    </div>
+                    <div class="flex flex-col">
+                        <h1 class="text-base font-extrabold text-white tracking-tight leading-none">INMAP</h1>
+                        <span class="text-[9px] text-amber-400 font-semibold tracking-wide uppercase">MAPSI 2026</span>
+                    </div>
+                </li>
+
+                <!-- Menu Navigasi -->
+                <li><a href="#" onclick="switchTab('home'); return false;" id="nav-home" class="nav-item nav-active flex flex-col items-center px-4 py-2 rounded-xl"><i class="fas fa-home text-lg mb-1"></i><span class="text-xs font-semibold">Home</span></a></li>
+                <li><a href="#" onclick="switchTab('cabang'); return false;" id="nav-cabang" class="nav-item flex flex-col items-center px-4 py-2 rounded-xl"><i class="fas fa-trophy text-lg mb-1"></i><span class="text-xs font-semibold">Cabang</span></a></li>
+                <li><a href="#" onclick="switchTab('jadwal'); return false;" id="nav-jadwal" class="nav-item flex flex-col items-center px-4 py-2 rounded-xl"><i class="fas fa-calendar-alt text-lg mb-1"></i><span class="text-xs font-semibold">Jadwal</span></a></li>
+                <li><a href="#" onclick="switchTab('venue'); return false;" id="nav-venue" class="nav-item flex flex-col items-center px-4 py-2 rounded-xl"><i class="fas fa-map-marker-alt text-lg mb-1"></i><span class="text-xs font-semibold">Venue</span></a></li>
+                <li><a href="#" onclick="switchTab('pemondokan'); return false;" id="nav-pemondokan" class="nav-item flex flex-col items-center px-4 py-2 rounded-xl"><i class="fas fa-house-user text-lg mb-1"></i><span class="text-xs font-semibold">Pemondokan</span></a></li>
+                <li><a href="#" onclick="switchTab('media'); return false;" id="nav-media" class="nav-item flex flex-col items-center px-4 py-2 rounded-xl"><i class="fas fa-photo-video text-lg mb-1"></i><span class="text-xs font-semibold">Media</span></a></li>
+                <li><a href="#" onclick="switchTab('wisata'); return false;" id="nav-wisata" class="nav-item flex flex-col items-center px-4 py-2 rounded-xl"><i class="fas fa-map-signs text-lg mb-1"></i><span class="text-xs font-semibold">Wisata</span></a></li>
+                <li><a href="#" onclick="switchTab('oleholeh'); return false;" id="nav-oleholeh" class="nav-item flex flex-col items-center px-4 py-2 rounded-xl"><i class="fas fa-shopping-bag text-lg mb-1"></i><span class="text-xs font-semibold">Oleh-oleh</span></a></li>
+                <li><a href="#" onclick="switchTab('hotel'); return false;" id="nav-hotel" class="nav-item flex flex-col items-center px-4 py-2 rounded-xl"><i class="fas fa-hotel text-lg mb-1"></i><span class="text-xs font-semibold">Hotel</span></a></li>
+                <li><a href="#" onclick="switchTab('denah'); return false;" id="nav-denah" class="nav-item flex flex-col items-center px-4 py-2 rounded-xl"><i class="fas fa-map-marked-alt text-lg mb-1"></i><span class="text-xs font-semibold">Denah</span></a></li>
+                <li><a href="#" onclick="switchTab('sk'); return false;" id="nav-sk" class="nav-item flex flex-col items-center px-4 py-2 rounded-xl"><i class="fas fa-file-signature text-lg mb-1"></i><span class="text-xs font-semibold">SK</span></a></li>
+                <li><a href="#" onclick="switchTab('unduhan'); return false;" id="nav-unduhan" class="nav-item flex flex-col items-center px-4 py-2 rounded-xl"><i class="fas fa-cloud-download-alt text-lg mb-1"></i><span class="text-xs font-semibold">Unduhan</span></a></li>
+            </ul>
+        </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="pt-24 pb-12 container mx-auto px-4 max-w-6xl flex-grow">
+        
+        <!-- ================= TAB 1: HOME / DASHBOARD ================= -->
+        <section id="home" class="tab-content active pt-4">
+            
+            <!-- Banner Utama -->
+            <div class="bg-gradient-to-br from-black via-purple-950 to-slate-950 rounded-3xl shadow-2xl overflow-hidden relative mb-8 border border-purple-900/40">
+                <div class="absolute inset-0 opacity-20 pointer-events-none">
+                    <svg class="w-full h-full" xmlns="http://www.w3.org/2000/svg" width="120" height="120" viewBox="0 0 120 120">
+                        <pattern id="motif-purworejo" x="0" y="0" width="80" height="80" patternUnits="userSpaceOnUse">
+                            <path d="M 40 10 C 24 10 24 38 40 38 C 56 38 56 66 40 66 C 24 66 24 38 40 38 C 56 38 56 10 40 10 Z" fill="none" stroke="#d8b4fe" stroke-width="2"/>
+                            <circle cx="40" cy="24" r="4" fill="#fbbf24"/>
+                            <circle cx="40" cy="52" r="4" fill="#fbbf24"/>
+                            <path d="M 15 40 Q 5 32 15 24 Q 25 32 15 40 Z" fill="#c084fc" opacity="0.7"/>
+                            <path d="M 65 40 Q 55 32 65 24 Q 75 32 65 40 Z" fill="#c084fc" opacity="0.7"/>
+                            <circle cx="15" cy="32" r="2" fill="#fbbf24"/>
+                            <circle cx="65" cy="32" r="2" fill="#fbbf24"/>
+                        </pattern>
+                        <rect width="100%" height="100%" fill="url(#motif-purworejo)"/>
+                    </svg>
+                </div>
+
+                <div class="absolute right-0 top-0 text-purple-500 opacity-10 transform translate-x-10 -translate-y-10">
+                    <i class="fas fa-star-and-crescent" style="font-size: 20rem;"></i>
+                </div>
+                
+                <div class="p-8 md:p-12 relative z-10">
+                    <span class="inline-block bg-gradient-to-r from-amber-400 to-amber-500 text-purple-950 px-4 py-1.5 rounded-full text-xs font-extrabold tracking-wider uppercase mb-4 shadow-md">
+                        <i class="fas fa-crown mr-1"></i> Portal Informasi
+                    </span>
+                    <h2 class="text-3xl md:text-5xl font-extrabold text-white mb-4 leading-tight">Selamat Datang di Dashboard <br class="hidden md:block" /> INMAP 2026</h2>
+                    <p class="text-purple-200 text-lg md:text-xl max-w-3xl leading-relaxed mb-8">Pusat Layanan <strong>INMAP (Informasi MAPSI)</strong> Kabupaten Purworejo Tahun 2026.</p>
+                    <div class="flex flex-wrap gap-4">
+                        <div class="bg-purple-900/50 backdrop-blur-md border border-purple-500/30 text-purple-100 px-5 py-2.5 rounded-full text-sm font-medium flex items-center shadow-sm">
+                            <i class="fas fa-map-marker-alt text-red-400 mr-2 text-lg"></i> Kab. Purworejo
+                        </div>
+                        <div class="bg-purple-900/50 backdrop-blur-md border border-purple-500/30 text-purple-100 px-5 py-2.5 rounded-full text-sm font-medium flex items-center shadow-sm">
+                            <i class="fas fa-calendar-check text-amber-300 mr-2 text-lg"></i> 13 - 15 Nov 2026
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                <div class="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 flex items-center gap-5 transition">
+                    <div class="w-14 h-14 rounded-full bg-purple-100 text-purple-700 flex items-center justify-center text-2xl"><i class="fas fa-city"></i></div>
+                    <div><p class="text-gray-500 text-sm font-medium">Total Kabupaten/Kota</p><p class="text-2xl font-bold text-gray-800">35 Kafilah</p></div>
+                </div>
+                <div class="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 flex items-center gap-5 cursor-pointer hover:border-purple-400 transition" onclick="switchTab('cabang')">
+                    <div class="w-14 h-14 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center text-2xl"><i class="fas fa-quran"></i></div>
+                    <div><p class="text-gray-500 text-sm font-medium">Cabang Lomba</p><p class="text-2xl font-bold text-gray-800">12 Cabang</p></div>
+                </div>
+                <div class="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 flex items-center gap-5 cursor-pointer hover:border-purple-400 transition" onclick="document.getElementById('pengumuman-section').scrollIntoView({behavior: 'smooth'})">
+                    <div class="w-14 h-14 rounded-full bg-orange-100 text-orange-600 flex items-center justify-center text-2xl"><i class="fas fa-bullhorn"></i></div>
+                    <div><p class="text-gray-500 text-sm font-medium">Papan Pengumuman</p><p class="text-md font-bold text-gray-800 hover:text-purple-700">Lihat Info Terbaru &rarr;</p></div>
+                </div>
+            </div>
+
+            <div id="pengumuman-section" class="bg-white rounded-2xl shadow-sm border border-purple-200 p-6 md:p-8 relative">
+                <div class="flex justify-between items-center border-b border-gray-100 pb-4 mb-4">
+                    <h3 class="text-xl font-bold text-gray-800 flex items-center">
+                        <i class="fas fa-bullhorn text-purple-600 text-2xl mr-3"></i> Papan Pengumuman
+                    </h3>
+                    <button onclick="toggleEditPengumuman()" class="bg-gray-100 text-gray-600 border border-gray-300 px-3 py-1.5 rounded-lg text-xs font-bold hover:bg-gray-200 transition flex items-center">
+                        <i class="fas fa-edit mr-1"></i> Edit (Admin)
+                    </button>
+                </div>
+                <div id="pengumuman-view" class="text-gray-700 leading-relaxed whitespace-pre-line text-lg">Selamat datang di Aplikasi Portal INMAP 2026. 
+
+Saat ini seluruh kafilah diharapkan mempersiapkan kelengkapan administrasi dan terus memantau pembaruan jadwal pada sistem ini. Pastikan Anda telah mengunduh berkas SK dan Juknis di menu Unduhan.</div>
+                <div id="pengumuman-edit" class="hidden">
+                    <div class="bg-yellow-50 border-l-4 border-yellow-400 p-3 mb-3 text-sm text-yellow-800">
+                        <i class="fas fa-info-circle mr-1"></i> Anda dalam mode Edit Admin. Perubahan yang disimpan akan langsung tampil di memori sementara browser.
+                    </div>
+                    <textarea id="pengumuman-input" class="w-full h-48 border border-gray-300 rounded-xl p-4 text-gray-700 focus:outline-none focus:border-purple-500 focus:ring-1 focus:ring-purple-500 mb-3 text-lg leading-relaxed"></textarea>
+                    <div class="flex justify-end gap-2">
+                        <button onclick="cancelEditPengumuman()" class="bg-gray-200 text-gray-700 px-5 py-2 rounded-lg text-sm font-semibold hover:bg-gray-300 transition">Batal</button>
+                        <button onclick="savePengumuman()" class="bg-purple-700 text-white px-5 py-2 rounded-lg text-sm font-semibold hover:bg-purple-800 transition">Simpan Pengumuman</button>
+                    </div>
+                </div>
+            </div>
+
+        </section>
+
+        <!-- ================= TAB 2: CABANG LOMBA ================= -->
+        <section id="cabang" class="tab-content pt-4">
+            <div class="text-center mb-8">
+                <h3 class="text-3xl font-extrabold text-gray-800">Daftar Cabang Lomba</h3>
+                <div class="w-24 h-1 bg-purple-600 mx-auto mt-4 rounded-full"></div>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div class="lomba-card bg-white p-6 rounded-2xl border border-gray-200 shadow-sm flex items-start gap-4">
+                    <div class="bg-green-100 text-green-600 p-3 rounded-xl text-2xl"><i class="fas fa-book-open"></i></div>
+                    <div><h4 class="font-bold text-lg text-gray-800">Pengetahuan PAI & BTQ</h4><p class="text-sm text-gray-500 mt-1">Putra & Putri</p></div>
+                </div>
+                <div class="lomba-card bg-white p-6 rounded-2xl border border-gray-200 shadow-sm flex items-start gap-4">
+                    <div class="bg-blue-100 text-blue-600 p-3 rounded-xl text-2xl"><i class="fas fa-person-praying"></i></div>
+                    <div><h4 class="font-bold text-lg text-gray-800">Praktik Wudu & Salat</h4><p class="text-sm text-gray-500 mt-1">Putra & Putri</p></div>
+                </div>
+                <div class="lomba-card bg-white p-6 rounded-2xl border border-gray-200 shadow-sm flex items-start gap-4">
+                    <div class="bg-orange-100 text-orange-600 p-3 rounded-xl text-2xl"><i class="fas fa-volume-high"></i></div>
+                    <div><h4 class="font-bold text-lg text-gray-800">Keterampilan Azan</h4><p class="text-sm text-gray-500 mt-1">Putra</p></div>
+                </div>
+                <div class="lomba-card bg-white p-6 rounded-2xl border border-gray-200 shadow-sm flex items-start gap-4">
+                    <div class="bg-purple-100 text-purple-600 p-3 rounded-xl text-2xl"><i class="fas fa-laptop-code"></i></div>
+                    <div><h4 class="font-bold text-lg text-gray-800">Komputer Islami</h4><p class="text-sm text-gray-500 mt-1">Putra & Putri</p></div>
+                </div>
+                <div class="lomba-card bg-white p-6 rounded-2xl border border-gray-200 shadow-sm flex items-start gap-4">
+                    <div class="bg-teal-100 text-teal-600 p-3 rounded-xl text-2xl"><i class="fas fa-book-quran"></i></div>
+                    <div><h4 class="font-bold text-lg text-gray-800">Hifzil Qur'an</h4><p class="text-sm text-gray-500 mt-1">Putra & Putri</p></div>
+                </div>
+                <div class="lomba-card bg-white p-6 rounded-2xl border border-gray-200 shadow-sm flex items-start gap-4">
+                    <div class="bg-red-100 text-red-600 p-3 rounded-xl text-2xl"><i class="fas fa-pen-fancy"></i></div>
+                    <div><h4 class="font-bold text-lg text-gray-800">Seni Kaligrafi</h4><p class="text-sm text-gray-500 mt-1">Putra & Putri</p></div>
+                </div>
+                <div class="lomba-card bg-white p-6 rounded-2xl border border-gray-200 shadow-sm flex items-start gap-4">
+                    <div class="bg-yellow-100 text-yellow-600 p-3 rounded-xl text-2xl"><i class="fas fa-paintbrush"></i></div>
+                    <div><h4 class="font-bold text-lg text-gray-800">Seni Khat Al Qur'an</h4><p class="text-sm text-gray-500 mt-1">Putra & Putri</p></div>
+                </div>
+                <div class="lomba-card bg-white p-6 rounded-2xl border border-gray-200 shadow-sm flex items-start gap-4">
+                    <div class="bg-indigo-100 text-indigo-600 p-3 rounded-xl text-2xl"><i class="fas fa-bullhorn"></i></div>
+                    <div><h4 class="font-bold text-lg text-gray-800">Seni Khitabah</h4><p class="text-sm text-gray-500 mt-1">Putra & Putri</p></div>
+                </div>
+                <div class="lomba-card bg-white p-6 rounded-2xl border border-gray-200 shadow-sm flex items-start gap-4">
+                    <div class="bg-pink-100 text-pink-600 p-3 rounded-xl text-2xl"><i class="fas fa-music"></i></div>
+                    <div><h4 class="font-bold text-lg text-gray-800">Seni Macapat Islami</h4><p class="text-sm text-gray-500 mt-1">Putra & Putri</p></div>
+                </div>
+                <div class="lomba-card bg-white p-6 rounded-2xl border border-gray-200 shadow-sm flex items-start gap-4">
+                    <div class="bg-sky-100 text-sky-600 p-3 rounded-xl text-2xl"><i class="fas fa-users-viewfinder"></i></div>
+                    <div><h4 class="font-bold text-lg text-gray-800">Cerita Islami</h4><p class="text-sm text-gray-500 mt-1">Putra & Putri</p></div>
+                </div>
+                <div class="lomba-card bg-white p-6 rounded-2xl border border-gray-200 shadow-sm flex items-start gap-4">
+                    <div class="bg-rose-100 text-rose-600 p-3 rounded-xl text-2xl"><i class="fas fa-microphone"></i></div>
+                    <div><h4 class="font-bold text-lg text-gray-800">Duet Religi</h4><p class="text-sm text-gray-500 mt-1">Berpasangan</p></div>
+                </div>
+                <div class="lomba-card bg-white p-6 rounded-2xl border border-gray-200 shadow-sm flex items-start gap-4">
+                    <div class="bg-amber-100 text-amber-600 p-3 rounded-xl text-2xl"><i class="fas fa-drum"></i></div>
+                    <div><h4 class="font-bold text-lg text-gray-800">Seni Rebana</h4><p class="text-sm text-gray-500 mt-1">Beregu / Grup</p></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= TAB 3: JADWAL ================= -->
+        <section id="jadwal" class="tab-content pt-4">
+            <div class="text-center mb-8">
+                <h3 class="text-3xl font-extrabold text-gray-800">Jadwal Kegiatan</h3>
+                <div class="w-24 h-1 bg-purple-600 mx-auto mt-4 rounded-full"></div>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                <div class="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
+                    <div class="bg-purple-900 text-white p-4 text-center"><h4 class="font-bold text-lg">Jumat, 13 Nov 2026</h4></div>
+                    <div class="p-6">
+                        <ul class="space-y-4 text-sm text-gray-700">
+                            <li class="flex flex-col border-b border-gray-100 pb-2"><span class="font-bold text-purple-700">07.00 - 13.00</span><span>Kedatangan Kafilah ke Purworejo.</span></li>
+                            <li class="flex flex-col border-b border-gray-100 pb-2"><span class="font-bold text-purple-700">13.00 - 16.00</span><span>Opening Ceremony di SMAN 7.</span></li>
+                            <li class="flex flex-col"><span class="font-bold text-purple-700">19.30 - 22.00</span><span>Lomba Duet Religi & Rebana.</span></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
+                    <div class="bg-purple-800 text-white p-4 text-center"><h4 class="font-bold text-lg">Sabtu, 14 Nov 2026</h4></div>
+                    <div class="p-6">
+                        <ul class="space-y-4 text-sm text-gray-700">
+                            <li class="flex flex-col border-b border-gray-100 pb-2"><span class="font-bold text-purple-700">08.00 - 11.30</span><span>Pelaksanaan Lomba (Sesi 1).</span></li>
+                            <li class="flex flex-col border-b border-gray-100 pb-2"><span class="font-bold text-purple-700">13.00 - 16.30</span><span>Pelaksanaan Lomba (Sesi 2).</span></li>
+                            <li class="flex flex-col"><span class="font-bold text-purple-700">19.30 - 22.00</span><span>Lanjutan Duet Religi & Rebana.</span></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
+                    <div class="bg-purple-950 text-white p-4 text-center"><h4 class="font-bold text-lg">Minggu, 15 Nov 2026</h4></div>
+                    <div class="p-6">
+                        <ul class="space-y-4 text-sm text-gray-700">
+                            <li class="flex flex-col border-b border-gray-100 pb-2"><span class="font-bold text-purple-700">08.00 - 09.00</span><span>Sidang Dewan Hakim.</span></li>
+                            <li class="flex flex-col border-b border-gray-100 pb-2"><span class="font-bold text-purple-700">09.00 - 10.30</span><span>Closing Ceremony & Penyerahan Piala.</span></li>
+                            <li class="flex flex-col"><span class="font-bold text-purple-700">10.30 - Selesai</span><span>Sayonara kafilah.</span></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PDF Viewer & Admin Panel -->
+            <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-4 md:p-6 mt-6">
+                <div class="flex flex-col md:flex-row justify-between items-center mb-4 gap-4">
+                    <h4 class="font-bold text-lg text-gray-800 flex items-center"><i class="fas fa-file-pdf text-red-500 text-2xl mr-3"></i> Pratinjau Dokumen Jadwal</h4>
+                    <div class="flex gap-2 w-full md:w-auto">
+                        <!-- TAUTAN GOOGLE DRIVE: DOWNLOAD/VIEW JADWAL -->
+                        <a href="https://drive.google.com/file/d/16qMQOZD2Ft5jNYZtMQ12fd-FZbCuDw8L/view?usp=sharing" target="_blank" class="flex-1 md:flex-none text-center bg-purple-50 text-purple-700 border border-purple-200 px-4 py-2 rounded-lg text-sm font-semibold hover:bg-purple-100 transition"><i class="fas fa-external-link-alt mr-1"></i> Buka via Drive</a>
+                        <button onclick="loginAdminPDF()" class="flex-1 md:flex-none bg-gray-800 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-gray-700 transition shadow-sm"><i class="fas fa-lock mr-1"></i> Admin</button>
+                    </div>
+                </div>
+                <div id="admin-panel-pdf" class="hidden bg-yellow-50 border border-yellow-200 rounded-xl p-4 mb-4 flex-wrap gap-3 items-center">
+                    <div class="text-yellow-800 font-bold text-sm w-full md:w-auto md:mr-2 flex items-center mb-2 md:mb-0"><i class="fas fa-user-shield text-lg mr-2"></i> Mode Admin:</div>
+                    <button onclick="alert('Upload ke Google Drive di tab baru')" class="flex-1 md:flex-none bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-blue-700 transition"><i class="fas fa-upload md:mr-2"></i> Upload ke Drive</button>
+                </div>
+                <div class="w-full h-[500px] md:h-[700px] rounded-xl overflow-hidden border border-gray-300 bg-gray-100 relative">
+                    <!-- TAUTAN GOOGLE DRIVE: IFRAME PREVIEW JADWAL -->
+                    <!-- Pastikan bagian akhir link diubah dari /view?usp=sharing menjadi /preview -->
+                    <iframe src="https://drive.google.com/file/d/16qMQOZD2Ft5jNYZtMQ12fd-FZbCuDw8L/view?usp=preview" type="application/pdf" class="w-full h-full absolute inset-0" style="border: none;">
+                        <p class="p-6 text-center">Browser tidak mendukung PDF. <a href="https://drive.google.com/file/d/16qMQOZD2Ft5jNYZtMQ12fd-FZbCuDw8L/view?usp=sharing" class="text-purple-600">Buka di Google Drive.</a></p>
+                    </iframe>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= TAB 4: VENUE ================= -->
+        <section id="venue" class="tab-content pt-4">
+            <div class="text-center mb-8">
+                <h3 class="text-3xl font-extrabold text-gray-800">Venue & Tempat Lomba</h3>
+                <div class="w-24 h-1 bg-purple-600 mx-auto mt-4 rounded-full"></div>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div class="lomba-card bg-white p-6 rounded-2xl border border-gray-200 shadow-sm flex flex-col justify-between">
+                    <div class="flex items-start gap-4">
+                        <div class="bg-red-100 text-red-600 p-3 rounded-xl text-2xl"><i class="fas fa-landmark"></i></div>
+                        <div class="w-full">
+                            <h4 class="font-bold text-lg text-gray-800">Pendopo Kab. Purworejo</h4>
+                            <ul class="list-disc list-outside ml-4 text-sm text-gray-600 mt-2 border-t border-gray-100 pt-3 space-y-1"><li>Menyanyi Duet Lagu Religi</li></ul>
+                        </div>
+                    </div>
+                    <div class="mt-4 pt-3 border-t border-gray-100">
+                        <a href="https://www.google.com/maps/search/?api=1&query=Pendopo+Kabupaten+Purworejo" target="_blank" class="inline-flex items-center text-xs font-bold text-red-600 bg-red-50 hover:bg-red-100 px-3 py-2 rounded-lg transition w-full justify-center">
+                            <i class="fas fa-map-marker-alt mr-2 text-red-500"></i> Buka Google Maps &rarr;
+                        </a>
+                    </div>
+                </div>
+
+                <div class="lomba-card bg-white p-6 rounded-2xl border border-gray-200 shadow-sm flex flex-col justify-between">
+                    <div class="flex items-start gap-4">
+                        <div class="bg-blue-100 text-blue-600 p-3 rounded-xl text-2xl"><i class="fas fa-building-user"></i></div>
+                        <div class="w-full">
+                            <h4 class="font-bold text-lg text-gray-800">Aula Dinas Pendidikan</h4>
+                            <ul class="list-disc list-outside ml-4 text-sm text-gray-600 mt-2 border-t border-gray-100 pt-3 space-y-1"><li>Pengetahuan PAI dan BTQ (Putri)</li></ul>
+                        </div>
+                    </div>
+                    <div class="mt-4 pt-3 border-t border-gray-100">
+                        <a href="https://www.google.com/maps/search/?api=1&query=Dinas+Pendidikan+dan+Kebudayaan+Kabupaten+Purworejo" target="_blank" class="inline-flex items-center text-xs font-bold text-blue-600 bg-blue-50 hover:bg-blue-100 px-3 py-2 rounded-lg transition w-full justify-center">
+                            <i class="fas fa-map-marker-alt mr-2 text-blue-500"></i> Buka Google Maps &rarr;
+                        </a>
+                    </div>
+                </div>
+
+                <div class="lomba-card bg-white p-6 rounded-2xl border border-gray-200 shadow-sm flex flex-col justify-between">
+                    <div class="flex items-start gap-4">
+                        <div class="bg-amber-100 text-amber-600 p-3 rounded-xl text-2xl"><i class="fas fa-building"></i></div>
+                        <div class="w-full">
+                            <h4 class="font-bold text-lg text-gray-800">Gedung Arahiwang Setda</h4>
+                            <ul class="list-disc list-outside ml-4 text-sm text-gray-600 mt-2 border-t border-gray-100 pt-3 space-y-1"><li>Pengetahuan PAI dan BTQ (Putra)</li></ul>
+                        </div>
+                    </div>
+                    <div class="mt-4 pt-3 border-t border-gray-100">
+                        <a href="https://www.google.com/maps/search/?api=1&query=Gedung+Arahiwang+Setda+Purworejo" target="_blank" class="inline-flex items-center text-xs font-bold text-amber-600 bg-amber-50 hover:bg-amber-100 px-3 py-2 rounded-lg transition w-full justify-center">
+                            <i class="fas fa-map-marker-alt mr-2 text-amber-500"></i> Buka Google Maps &rarr;
+                        </a>
+                    </div>
+                </div>
+
+                <div class="lomba-card bg-white p-6 rounded-2xl border border-gray-200 shadow-sm flex flex-col justify-between">
+                    <div class="flex items-start gap-4">
+                        <div class="bg-emerald-100 text-emerald-600 p-3 rounded-xl text-2xl"><i class="fas fa-school"></i></div>
+                        <div class="w-full">
+                            <h4 class="font-bold text-lg text-gray-800">SMAN 7 Purworejo</h4>
+                            <ul class="list-disc list-outside ml-4 text-sm text-gray-600 mt-2 border-t border-gray-100 pt-3 space-y-1">
+                                <li>Seni Musik Rebana</li><li>Seni Kaligrafi</li><li>Seni Khat Al Qur'an</li><li>Keterampilan Komputer Islami</li><li>Cerita Islami</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="mt-4 pt-3 border-t border-gray-100">
+                        <a href="https://www.google.com/maps/search/?api=1&query=SMAN+7+Purworejo" target="_blank" class="inline-flex items-center text-xs font-bold text-emerald-600 bg-emerald-50 hover:bg-emerald-100 px-3 py-2 rounded-lg transition w-full justify-center">
+                            <i class="fas fa-map-marker-alt mr-2 text-emerald-500"></i> Buka Google Maps &rarr;
+                        </a>
+                    </div>
+                </div>
+
+                <div class="lomba-card bg-white p-6 rounded-2xl border border-gray-200 shadow-sm flex flex-col justify-between">
+                    <div class="flex items-start gap-4">
+                        <div class="bg-indigo-100 text-indigo-600 p-3 rounded-xl text-2xl"><i class="fas fa-school-flag"></i></div>
+                        <div class="w-full">
+                            <h4 class="font-bold text-lg text-gray-800">SMPN 1 Purworejo</h4>
+                            <ul class="list-disc list-outside ml-4 text-sm text-gray-600 mt-2 border-t border-gray-100 pt-3 space-y-1">
+                                <li>Praktik Salat dan Wudu</li><li>Seni Tilawatil Qur'an</li><li>Seni Khitabah</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="mt-4 pt-3 border-t border-gray-100">
+                        <a href="https://www.google.com/maps/search/?api=1&query=SMPN+1+Purworejo" target="_blank" class="inline-flex items-center text-xs font-bold text-indigo-600 bg-indigo-50 hover:bg-indigo-100 px-3 py-2 rounded-lg transition w-full justify-center">
+                            <i class="fas fa-map-marker-alt mr-2 text-indigo-500"></i> Buka Google Maps &rarr;
+                        </a>
+                    </div>
+                </div>
+
+                <div class="lomba-card bg-white p-6 rounded-2xl border border-gray-200 shadow-sm flex flex-col justify-between">
+                    <div class="flex items-start gap-4">
+                        <div class="bg-purple-100 text-purple-600 p-3 rounded-xl text-2xl"><i class="fas fa-university"></i></div>
+                        <div class="w-full">
+                            <h4 class="font-bold text-lg text-gray-800">Kampus UMPWR Sucen</h4>
+                            <ul class="list-disc list-outside ml-4 text-sm text-gray-600 mt-2 border-t border-gray-100 pt-3 space-y-1">
+                                <li>Hifzil Qur'an</li><li>Seni Macapat Islami</li><li>Keterampilan Azan & Iqamah</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="mt-4 pt-3 border-t border-gray-100">
+                        <a href="https://www.google.com/maps/search/?api=1&query=Universitas+Muhammadiyah+Purworejo+Kampus+Sucen" target="_blank" class="inline-flex items-center text-xs font-bold text-purple-600 bg-purple-50 hover:bg-purple-100 px-3 py-2 rounded-lg transition w-full justify-center">
+                            <i class="fas fa-map-marker-alt mr-2 text-purple-500"></i> Buka Google Maps &rarr;
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= TAB: PEMONDOKAN ================= -->
+        <section id="pemondokan" class="tab-content pt-4">
+            <div class="flex flex-col md:flex-row justify-between items-center mb-8 gap-4 border-b border-gray-200 pb-4">
+                <div>
+                    <h3 class="text-3xl font-extrabold text-gray-800">Pemondokan Kafilah</h3>
+                    <div class="w-16 h-1 bg-purple-600 mt-2 rounded-full"></div>
+                </div>
+                <button onclick="loginAdminPemondokan()" class="bg-gray-800 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-gray-700 transition shadow-sm">
+                    <i class="fas fa-lock mr-2"></i>Login Admin
+                </button>
+            </div>
+
+            <div id="admin-panel-pemondokan" class="hidden bg-yellow-50 border border-yellow-200 rounded-xl p-4 mb-6 flex-wrap gap-3 items-center">
+                <div class="text-yellow-800 font-bold text-sm w-full md:w-auto md:mr-2 flex items-center mb-2 md:mb-0">
+                    <i class="fas fa-user-shield text-lg mr-2"></i> Mode Admin Aktif:
+                </div>
+                <button onclick="alert('Upload ke Google Drive di tab baru')" class="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-blue-700 transition shadow-sm">
+                    <i class="fas fa-upload mr-2"></i> Upload via Drive
+                </button>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="bg-white p-5 rounded-xl border border-gray-200 shadow-sm flex flex-col justify-between gap-4">
+                    <div class="flex items-start gap-4">
+                        <div class="bg-purple-100 text-purple-700 p-3 rounded-lg text-2xl"><i class="fas fa-file-pdf"></i></div>
+                        <div>
+                            <h4 class="font-bold text-gray-800">Lokasi Pemondokan Kafilah</h4>
+                            <p class="text-xs text-gray-500 mt-1">Tersimpan di Google Drive</p>
+                        </div>
+                    </div>
+                    <div class="flex gap-2 mt-2 pt-4 border-t border-gray-100">
+                        <!-- TAUTAN GOOGLE DRIVE: PEMONDOKAN PDF -->
+                        <a href="LINK_DRIVE_PEMONDOKAN_PDF" target="_blank" class="flex-1 text-center bg-purple-50 text-purple-700 border border-purple-200 px-3 py-2 rounded-lg text-sm font-semibold hover:bg-purple-100 transition"><i class="fas fa-external-link-alt mr-1"></i> Buka Dokumen</a>
+                    </div>
+                </div>
+
+                <div class="bg-white p-5 rounded-xl border border-gray-200 shadow-sm flex flex-col justify-between gap-4">
+                    <div class="flex items-start gap-4">
+                        <div class="bg-blue-100 text-blue-600 p-3 rounded-lg text-2xl"><i class="fas fa-file-word"></i></div>
+                        <div>
+                            <h4 class="font-bold text-gray-800">Daftar Kontak LO Kabupaten</h4>
+                            <p class="text-xs text-gray-500 mt-1">Tersimpan di Google Drive</p>
+                        </div>
+                    </div>
+                    <div class="flex gap-2 mt-2 pt-4 border-t border-gray-100">
+                        <!-- TAUTAN GOOGLE DRIVE: DAFTAR LO DOCX -->
+                        <a href="LINK_DRIVE_LO_DOCX" target="_blank" class="flex-1 text-center bg-purple-50 text-purple-700 border border-purple-200 px-3 py-2 rounded-lg text-sm font-semibold hover:bg-purple-100 transition"><i class="fas fa-external-link-alt mr-1"></i> Buka Dokumen</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= TAB: MEDIA & LIPUTAN ================= -->
+        <section id="media" class="tab-content pt-4">
+            <div class="text-center mb-8">
+                <h3 class="text-3xl font-extrabold text-gray-800">Dokumentasi Media & Liputan</h3>
+                <div class="w-24 h-1 bg-purple-600 mx-auto mt-4 rounded-full"></div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Portal Berita Blogspot -->
+                <div class="lomba-card bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden flex flex-col justify-between">
+                    <div class="p-6">
+                        <div class="flex items-center gap-3 mb-3">
+                            <div class="bg-orange-100 text-orange-600 p-3 rounded-xl text-xl"><i class="fas fa-newspaper"></i></div>
+                            <div>
+                                <span class="bg-orange-100 text-orange-700 text-xs font-bold px-2.5 py-0.5 rounded-full">Portal Berita Resmi</span>
+                                <h4 class="font-bold text-lg text-gray-800 mt-1">Web Terliput Blogspot</h4>
+                            </div>
+                        </div>
+                        <p class="text-sm text-gray-600 mt-2 border-t border-gray-100 pt-3">Kumpulan berita, rilis pers, dan liputan khusus pelaksanaan kegiatan MAPSI SD Tingkat Provinsi Jawa Tengah.</p>
+                    </div>
+                    <div class="p-6 pt-0">
+                        <a href="https://webterliput.blogspot.com" target="_blank" class="inline-flex items-center text-xs font-bold text-orange-600 bg-orange-50 hover:bg-orange-100 px-3 py-2 rounded-lg transition w-full justify-center">
+                            <i class="fas fa-globe mr-2"></i> Kunjungi webterliput.blogspot.com &rarr;
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Pratinjau Video YouTube 1 -->
+                <div class="lomba-card bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden flex flex-col justify-between">
+                    <div>
+                        <div class="w-full h-48 bg-black rounded-t-2xl overflow-hidden relative">
+                            <a href="https://www.youtube.com/@terliputtv9480" target="_blank" class="w-full h-full flex flex-col items-center justify-center bg-gray-900 text-white hover:bg-gray-800 transition group"><i class="fab fa-youtube text-5xl text-red-600 mb-3 group-hover:scale-110 transition"></i><span class="font-bold">Tonton di Terliput TV</span><span class="text-xs text-gray-400 mt-1">@terliputtv9480</span></a>
+                        </div>
+                        <div class="p-6">
+                            <h4 class="font-bold text-lg text-gray-800">Video Teaser & Dokumentasi MAPSI</h4>
+                            <p class="text-sm text-gray-600 mt-2 border-t border-gray-100 pt-3">Pratinjau keseruan persiapan dan kilas balik pelaksanaan MAPSI SD Provinsi Jawa Tengah.</p>
+                        </div>
+                    </div>
+                    <div class="p-6 pt-0">
+                        <a href="https://www.youtube.com/@terliputtv9480" target="_blank" class="inline-flex items-center text-xs font-bold text-red-600 bg-red-50 hover:bg-red-100 px-3 py-2 rounded-lg transition w-full justify-center">
+                            <i class="fab fa-youtube mr-2 text-red-500"></i> Buka Kanal YouTube &rarr;
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Pratinjau Video YouTube 2 -->
+                <div class="lomba-card bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden flex flex-col justify-between">
+                    <div>
+                        <div class="w-full h-48 bg-black rounded-t-2xl overflow-hidden relative">
+                            <a href="https://www.youtube.com/@terliputtv9480" target="_blank" class="w-full h-full flex flex-col items-center justify-center bg-gray-900 text-white hover:bg-gray-800 transition group"><i class="fab fa-youtube text-5xl text-red-600 mb-3 group-hover:scale-110 transition"></i><span class="font-bold">Live di Terliput TV</span><span class="text-xs text-gray-400 mt-1">@terliputtv9480</span></a>
+                        </div>
+                        <div class="p-6">
+                            <h4 class="font-bold text-lg text-gray-800">Highlight & Live Streaming Lomba</h4>
+                            <p class="text-sm text-gray-600 mt-2 border-t border-gray-100 pt-3">Siaran langsung dan sorotan momen terbaik dari seluruh cabang perlombaan.</p>
+                        </div>
+                    </div>
+                    <div class="p-6 pt-0">
+                        <a href="https://www.youtube.com/@terliputtv9480" target="_blank" class="inline-flex items-center text-xs font-bold text-red-600 bg-red-50 hover:bg-red-100 px-3 py-2 rounded-lg transition w-full justify-center">
+                            <i class="fab fa-youtube mr-2 text-red-500"></i> Buka Kanal YouTube &rarr;
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= TAB: WISATA & KOLAM RENANG ================= -->
+        <section id="wisata" class="tab-content pt-4">
+            <div class="text-center mb-8">
+                <h3 class="text-3xl font-extrabold text-gray-800">Destinasi Wisata & Kolam Renang</h3>
+                <div class="w-24 h-1 bg-cyan-500 mx-auto mt-4 rounded-full"></div>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Item 1 -->
+                <div class="lomba-card bg-white p-6 rounded-2xl border border-gray-200 shadow-sm flex flex-col justify-between">
+                    <div class="flex items-start gap-4">
+                        <div class="bg-cyan-100 text-cyan-600 p-3 rounded-xl text-2xl"><i class="fas fa-swimming-pool"></i></div>
+                        <div class="w-full">
+                            <h4 class="font-bold text-lg text-gray-800">Kolam Renang Arta Tirta</h4>
+                            <p class="text-sm text-gray-600 mt-2 border-t border-gray-100 pt-3">Fasilitas kolam renang yang luas dan cocok untuk anak-anak maupun dewasa di pusat kota.</p>
+                        </div>
+                    </div>
+                    <div class="mt-4 pt-3 border-t border-gray-100">
+                        <a href="https://www.google.com/maps/search/?api=1&query=Kolam+Renang+Arta+Tirta+Purworejo" target="_blank" class="inline-flex items-center text-xs font-bold text-cyan-600 bg-cyan-50 hover:bg-cyan-100 px-3 py-2 rounded-lg transition w-full justify-center">
+                            <i class="fas fa-map-marker-alt mr-2 text-cyan-500"></i> Buka Google Maps &rarr;
+                        </a>
+                    </div>
+                </div>
+                <!-- Item 2 -->
+                <div class="lomba-card bg-white p-6 rounded-2xl border border-gray-200 shadow-sm flex flex-col justify-between">
+                    <div class="flex items-start gap-4">
+                        <div class="bg-green-100 text-green-600 p-3 rounded-xl text-2xl"><i class="fas fa-tree"></i></div>
+                        <div class="w-full">
+                            <h4 class="font-bold text-lg text-gray-800">Alun-Alun Purworejo</h4>
+                            <p class="text-sm text-gray-600 mt-2 border-t border-gray-100 pt-3">Pusat keramaian kota, tempat bersantai menikmati suasana dengan berbagai kuliner malam.</p>
+                        </div>
+                    </div>
+                    <div class="mt-4 pt-3 border-t border-gray-100">
+                        <a href="https://www.google.com/maps/search/?api=1&query=Alun-Alun+Purworejo" target="_blank" class="inline-flex items-center text-xs font-bold text-green-600 bg-green-50 hover:bg-green-100 px-3 py-2 rounded-lg transition w-full justify-center">
+                            <i class="fas fa-map-marker-alt mr-2 text-green-500"></i> Buka Google Maps &rarr;
+                        </a>
+                    </div>
+                </div>
+                <!-- Item 3 -->
+                <div class="lomba-card bg-white p-6 rounded-2xl border border-gray-200 shadow-sm flex flex-col justify-between">
+                    <div class="flex items-start gap-4">
+                        <div class="bg-emerald-100 text-emerald-600 p-3 rounded-xl text-2xl"><i class="fas fa-mosque"></i></div>
+                        <div class="w-full">
+                            <h4 class="font-bold text-lg text-gray-800">Masjid Agung & Bedug Pendowo</h4>
+                            <p class="text-sm text-gray-600 mt-2 border-t border-gray-100 pt-3">Wisata religi dan sejarah melihat bedug terbesar di dunia yang berada di serambi masjid.</p>
+                        </div>
+                    </div>
+                    <div class="mt-4 pt-3 border-t border-gray-100">
+                        <a href="https://www.google.com/maps/search/?api=1&query=Masjid+Agung+Darul+Muttaqin+Purworejo" target="_blank" class="inline-flex items-center text-xs font-bold text-emerald-600 bg-emerald-50 hover:bg-emerald-100 px-3 py-2 rounded-lg transition w-full justify-center">
+                            <i class="fas fa-map-marker-alt mr-2 text-emerald-500"></i> Buka Google Maps &rarr;
+                        </a>
+                    </div>
+                </div>
+                <!-- Item 4 -->
+                <div class="lomba-card bg-white p-6 rounded-2xl border border-gray-200 shadow-sm flex flex-col justify-between">
+                    <div class="flex items-start gap-4">
+                        <div class="bg-orange-100 text-orange-600 p-3 rounded-xl text-2xl"><i class="fas fa-landmark"></i></div>
+                        <div class="w-full">
+                            <h4 class="font-bold text-lg text-gray-800">Museum Tosan Aji</h4>
+                            <p class="text-sm text-gray-600 mt-2 border-t border-gray-100 pt-3">Museum pusaka peninggalan sejarah dan benda cagar budaya yang kaya akan nilai edukasi.</p>
+                        </div>
+                    </div>
+                    <div class="mt-4 pt-3 border-t border-gray-100">
+                        <a href="https://www.google.com/maps/search/?api=1&query=Museum+Tosan+Aji+Purworejo" target="_blank" class="inline-flex items-center text-xs font-bold text-orange-600 bg-orange-50 hover:bg-orange-100 px-3 py-2 rounded-lg transition w-full justify-center">
+                            <i class="fas fa-map-marker-alt mr-2 text-orange-500"></i> Buka Google Maps &rarr;
+                        </a>
+                    </div>
+                </div>
+                <!-- Item 5 -->
+                <div class="lomba-card bg-white p-6 rounded-2xl border border-gray-200 shadow-sm flex flex-col justify-between">
+                    <div class="flex items-start gap-4">
+                        <div class="bg-teal-100 text-teal-600 p-3 rounded-xl text-2xl"><i class="fas fa-mountain-sun"></i></div>
+                        <div class="w-full">
+                            <h4 class="font-bold text-lg text-gray-800">Puncak Geger Menjangan</h4>
+                            <p class="text-sm text-gray-600 mt-2 border-t border-gray-100 pt-3">Destinasi wisata alam di perbukitan yang menawarkan pemandangan indah Kota Purworejo dari atas.</p>
+                        </div>
+                    </div>
+                    <div class="mt-4 pt-3 border-t border-gray-100">
+                        <a href="https://www.google.com/maps/search/?api=1&query=Geger+Menjangan+Purworejo" target="_blank" class="inline-flex items-center text-xs font-bold text-teal-600 bg-teal-50 hover:bg-teal-100 px-3 py-2 rounded-lg transition w-full justify-center">
+                            <i class="fas fa-map-marker-alt mr-2 text-teal-500"></i> Buka Google Maps &rarr;
+                        </a>
+                    </div>
+                </div>
+                <!-- Item 6 -->
+                <div class="lomba-card bg-white p-6 rounded-2xl border border-gray-200 shadow-sm flex flex-col justify-between">
+                    <div class="flex items-start gap-4">
+                        <div class="bg-blue-100 text-blue-600 p-3 rounded-xl text-2xl"><i class="fas fa-water"></i></div>
+                        <div class="w-full">
+                            <h4 class="font-bold text-lg text-gray-800">SAC (Sumber Adventure Center)</h4>
+                            <p class="text-sm text-gray-600 mt-2 border-t border-gray-100 pt-3">Kawasan rekreasi keluarga terpadu yang menyediakan wahana waterpark, outbond, dan taman bermain.</p>
+                        </div>
+                    </div>
+                    <div class="mt-4 pt-3 border-t border-gray-100">
+                        <a href="https://www.google.com/maps/search/?api=1&query=Sumber+Adventure+Center+Purworejo" target="_blank" class="inline-flex items-center text-xs font-bold text-blue-600 bg-blue-50 hover:bg-blue-100 px-3 py-2 rounded-lg transition w-full justify-center">
+                            <i class="fas fa-map-marker-alt mr-2 text-blue-500"></i> Buka Google Maps &rarr;
+                        </a>
+                    </div>
+                </div>
+                <!-- Item 7 -->
+                <div class="lomba-card bg-white p-6 rounded-2xl border border-gray-200 shadow-sm flex flex-col justify-between">
+                    <div class="flex items-start gap-4">
+                        <div class="bg-sky-100 text-sky-600 p-3 rounded-xl text-2xl"><i class="fas fa-umbrella-beach"></i></div>
+                        <div class="w-full">
+                            <h4 class="font-bold text-lg text-gray-800">Pantai Dewaruci Jatimalang</h4>
+                            <p class="text-sm text-gray-600 mt-2 border-t border-gray-100 pt-3">Wisata pantai ikonik Purworejo dengan patung Dewaruci besar dan aneka kuliner seafood.</p>
+                        </div>
+                    </div>
+                    <div class="mt-4 pt-3 border-t border-gray-100">
+                        <a href="https://www.google.com/maps/search/?api=1&query=Pantai+Dewaruci+Jatimalang" target="_blank" class="inline-flex items-center text-xs font-bold text-sky-600 bg-sky-50 hover:bg-sky-100 px-3 py-2 rounded-lg transition w-full justify-center">
+                            <i class="fas fa-map-marker-alt mr-2 text-sky-500"></i> Buka Google Maps &rarr;
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- ================= TAB: OLEH-OLEH KHAS ================= -->
+        <section id="oleholeh" class="tab-content pt-4">
+            <div class="text-center mb-8">
+                <h3 class="text-3xl font-extrabold text-gray-800">Pusat Kuliner & Oleh-oleh Khas</h3>
+                <div class="w-24 h-1 bg-orange-500 mx-auto mt-4 rounded-full"></div>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Item 1 -->
+                <div class="lomba-card bg-white p-6 rounded-2xl border border-gray-200 shadow-sm flex flex-col justify-between">
+                    <div class="flex items-start gap-4">
+                        <div class="bg-amber-100 text-amber-600 p-3 rounded-xl text-2xl"><i class="fas fa-bowl-food"></i></div>
+                        <div class="w-full">
+                            <h4 class="font-bold text-lg text-gray-800">Geblek & Tempe Benguk</h4>
+                            <p class="text-sm text-gray-600 mt-2 border-t border-gray-100 pt-3">Kombinasi camilan gurih kenyal khas Purworejo dari singkong bersanding dengan bumbu kacang.</p>
+                        </div>
+                    </div>
+                    <div class="mt-4 pt-3 border-t border-gray-100">
+                        <a href="https://www.google.com/maps/search/?api=1&query=Pusat+Geblek+Banyu+Urip+Purworejo" target="_blank" class="inline-flex items-center text-xs font-bold text-amber-600 bg-amber-50 hover:bg-amber-100 px-3 py-2 rounded-lg transition w-full justify-center">
+                            <i class="fas fa-map-marker-alt mr-2 text-amber-500"></i> Buka Google Maps &rarr;
+                        </a>
+                    </div>
+                </div>
+                <!-- Item 2 -->
+                <div class="lomba-card bg-white p-6 rounded-2xl border border-gray-200 shadow-sm flex flex-col justify-between">
+                    <div class="flex items-start gap-4">
+                        <div class="bg-gray-100 text-gray-700 p-3 rounded-xl text-2xl"><i class="fas fa-glass-water"></i></div>
+                        <div class="w-full">
+                            <h4 class="font-bold text-lg text-gray-800">Dawet Ireng Khas Butuh</h4>
+                            <p class="text-sm text-gray-600 mt-2 border-t border-gray-100 pt-3">Minuman segar dawet berwarna hitam alami dari merang, disajikan dengan santan dan gula aren lezat.</p>
+                        </div>
+                    </div>
+                    <div class="mt-4 pt-3 border-t border-gray-100">
+                        <a href="https://www.google.com/maps/search/?api=1&query=Dawet+Ireng+Asli+Jembatan+Butuh+Purworejo" target="_blank" class="inline-flex items-center text-xs font-bold text-gray-700 bg-gray-50 hover:bg-gray-200 px-3 py-2 rounded-lg transition w-full justify-center">
+                            <i class="fas fa-map-marker-alt mr-2 text-gray-600"></i> Buka Google Maps &rarr;
+                        </a>
+                    </div>
+                </div>
+                <!-- Item 3 -->
+                <div class="lomba-card bg-white p-6 rounded-2xl border border-gray-200 shadow-sm flex flex-col justify-between">
+                    <div class="flex items-start gap-4">
+                        <div class="bg-yellow-100 text-yellow-600 p-3 rounded-xl text-2xl"><i class="fas fa-candy-cane"></i></div>
+                        <div class="w-full">
+                            <h4 class="font-bold text-lg text-gray-800">Kue Clorot</h4>
+                            <p class="text-sm text-gray-600 mt-2 border-t border-gray-100 pt-3">Jajanan tradisional manis berbahan tepung beras dan gula merah, dibungkus unik mengerucut dari janur.</p>
+                        </div>
+                    </div>
+                    <div class="mt-4 pt-3 border-t border-gray-100">
+                        <a href="https://www.google.com/maps/search/?api=1&query=Pusat+Oleh-Oleh+Pasar+Grabag+Purworejo" target="_blank" class="inline-flex items-center text-xs font-bold text-yellow-600 bg-yellow-50 hover:bg-yellow-100 px-3 py-2 rounded-lg transition w-full justify-center">
+                            <i class="fas fa-map-marker-alt mr-2 text-yellow-500"></i> Buka Google Maps &rarr;
+                        </a>
+                    </div>
+                </div>
+                <!-- Item 4 -->
+                <div class="lomba-card bg-white p-6 rounded-2xl border border-gray-200 shadow-sm flex flex-col justify-between">
+                    <div class="flex items-start gap-4">
+                        <div class="bg-rose-100 text-rose-600 p-3 rounded-xl text-2xl"><i class="fas fa-cookie-bite"></i></div>
+                        <div class="w-full">
+                            <h4 class="font-bold text-lg text-gray-800">Kue Lompong</h4>
+                            <p class="text-sm text-gray-600 mt-2 border-t border-gray-100 pt-3">Kue hitam manis bertekstur kenyal dengan isian kacang tanah, dibungkus khas dengan daun pisang kering.</p>
+                        </div>
+                    </div>
+                    <div class="mt-4 pt-3 border-t border-gray-100">
+                        <a href="https://www.google.com/maps/search/?api=1&query=Kue+Lompong+Purworejo" target="_blank" class="inline-flex items-center text-xs font-bold text-rose-600 bg-rose-50 hover:bg-rose-100 px-3 py-2 rounded-lg transition w-full justify-center">
+                            <i class="fas fa-map-marker-alt mr-2 text-rose-500"></i> Buka Google Maps &rarr;
+                        </a>
+                    </div>
+                </div>
+                <!-- Item 5 -->
+                <div class="lomba-card bg-white p-6 rounded-2xl border border-gray-200 shadow-sm flex flex-col justify-between">
+                    <div class="flex items-start gap-4">
+                        <div class="bg-orange-100 text-orange-600 p-3 rounded-xl text-2xl"><i class="fas fa-circle-notch"></i></div>
+                        <div class="w-full">
+                            <h4 class="font-bold text-lg text-gray-800">Lanting Khas</h4>
+                            <p class="text-sm text-gray-600 mt-2 border-t border-gray-100 pt-3">Camilan renyah berbentuk angka delapan berbahan dasar singkong, tersedia dalam berbagai varian rasa gurih.</p>
+                        </div>
+                    </div>
+                    <div class="mt-4 pt-3 border-t border-gray-100">
+                        <a href="https://www.google.com/maps/search/?api=1&query=Toko+Oleh-Oleh+Khas+Purworejo" target="_blank" class="inline-flex items-center text-xs font-bold text-orange-600 bg-orange-50 hover:bg-orange-100 px-3 py-2 rounded-lg transition w-full justify-center">
+                            <i class="fas fa-map-marker-alt mr-2 text-orange-500"></i> Buka Google Maps &rarr;
+                        </a>
+                    </div>
+                </div>
+                <!-- Item 6 -->
+                <div class="lomba-card bg-white p-6 rounded-2xl border border-gray-200 shadow-sm flex flex-col justify-between">
+                    <div class="flex items-start gap-4">
+                        <div class="bg-red-100 text-red-600 p-3 rounded-xl text-2xl"><i class="fas fa-fire-burner"></i></div>
+                        <div class="w-full">
+                            <h4 class="font-bold text-lg text-gray-800">Sate Winong</h4>
+                            <p class="text-sm text-gray-600 mt-2 border-t border-gray-100 pt-3">Sate kambing khas dengan potongan besar dan bumbu kecap spesial dicampur irisan daun jeruk yang harum.</p>
+                        </div>
+                    </div>
+                    <div class="mt-4 pt-3 border-t border-gray-100">
+                        <a href="https://www.google.com/maps/search/?api=1&query=Sate+Winong+Asli+Purworejo" target="_blank" class="inline-flex items-center text-xs font-bold text-red-600 bg-red-50 hover:bg-red-100 px-3 py-2 rounded-lg transition w-full justify-center">
+                            <i class="fas fa-map-marker-alt mr-2 text-red-500"></i> Buka Google Maps &rarr;
+                        </a>
+                    </div>
+                </div>
+                <!-- Item 7 -->
+                <div class="lomba-card bg-white p-6 rounded-2xl border border-gray-200 shadow-sm flex flex-col justify-between">
+                    <div class="flex items-start gap-4">
+                        <div class="bg-fuchsia-100 text-fuchsia-600 p-3 rounded-xl text-2xl"><i class="fas fa-box-open"></i></div>
+                        <div class="w-full">
+                            <h4 class="font-bold text-lg text-gray-800">Jenang Krasikan</h4>
+                            <p class="text-sm text-gray-600 mt-2 border-t border-gray-100 pt-3">Oleh-oleh jenang bertekstur agak kasar (berpasir) dari beras ketan sangrai dan gula merah yang legit.</p>
+                        </div>
+                    </div>
+                    <div class="mt-4 pt-3 border-t border-gray-100">
+                        <a href="https://www.google.com/maps/search/?api=1&query=Jenang+Krasikan+Toko+Oleh+Oleh+Purworejo" target="_blank" class="inline-flex items-center text-xs font-bold text-fuchsia-600 bg-fuchsia-50 hover:bg-fuchsia-100 px-3 py-2 rounded-lg transition w-full justify-center">
+                            <i class="fas fa-map-marker-alt mr-2 text-fuchsia-500"></i> Buka Google Maps &rarr;
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= TAB: HOTEL ================= -->
+        <section id="hotel" class="tab-content pt-4">
+            <div class="text-center mb-8">
+                <h3 class="text-3xl font-extrabold text-gray-800">Daftar Hotel & Penginapan</h3>
+                <div class="w-24 h-1 bg-violet-500 mx-auto mt-4 rounded-full"></div>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Item 1 -->
+                <div class="lomba-card bg-white p-6 rounded-2xl border border-gray-200 shadow-sm flex flex-col justify-between">
+                    <div class="flex items-start gap-4">
+                        <div class="bg-violet-100 text-violet-600 p-3 rounded-xl text-2xl"><i class="fas fa-hotel"></i></div>
+                        <div class="w-full">
+                            <h4 class="font-bold text-lg text-gray-800">Hotel Plaza Purworejo</h4>
+                            <p class="text-sm text-gray-600 mt-2 border-t border-gray-100 pt-3">Hotel nyaman dengan fasilitas lengkap yang berlokasi strategis di kawasan pusat kota Purworejo.</p>
+                        </div>
+                    </div>
+                    <div class="mt-4 pt-3 border-t border-gray-100">
+                        <a href="https://www.google.com/maps/search/?api=1&query=Hotel+Plaza+Purworejo" target="_blank" class="inline-flex items-center text-xs font-bold text-violet-600 bg-violet-50 hover:bg-violet-100 px-3 py-2 rounded-lg transition w-full justify-center">
+                            <i class="fas fa-map-marker-alt mr-2 text-violet-500"></i> Buka Google Maps &rarr;
+                        </a>
+                    </div>
+                </div>
+                <!-- Item 2 -->
+                <div class="lomba-card bg-white p-6 rounded-2xl border border-gray-200 shadow-sm flex flex-col justify-between">
+                    <div class="flex items-start gap-4">
+                        <div class="bg-purple-100 text-purple-600 p-3 rounded-xl text-2xl"><i class="fas fa-bed"></i></div>
+                        <div class="w-full">
+                            <h4 class="font-bold text-lg text-gray-800">Hotel Suronegaran</h4>
+                            <p class="text-sm text-gray-600 mt-2 border-t border-gray-100 pt-3">Penginapan legendaris bernuansa klasik dengan akses sangat dekat ke Alun-Alun dan pusat kuliner.</p>
+                        </div>
+                    </div>
+                    <div class="mt-4 pt-3 border-t border-gray-100">
+                        <a href="https://www.google.com/maps/search/?api=1&query=Hotel+Suronegaran+Purworejo" target="_blank" class="inline-flex items-center text-xs font-bold text-purple-600 bg-purple-50 hover:bg-purple-100 px-3 py-2 rounded-lg transition w-full justify-center">
+                            <i class="fas fa-map-marker-alt mr-2 text-purple-500"></i> Buka Google Maps &rarr;
+                        </a>
+                    </div>
+                </div>
+                <!-- Item 3 -->
+                <div class="lomba-card bg-white p-6 rounded-2xl border border-gray-200 shadow-sm flex flex-col justify-between">
+                    <div class="flex items-start gap-4">
+                        <div class="bg-indigo-100 text-indigo-600 p-3 rounded-xl text-2xl"><i class="fas fa-building"></i></div>
+                        <div class="w-full">
+                            <h4 class="font-bold text-lg text-gray-800">Ganesha Syariah Hotel</h4>
+                            <p class="text-sm text-gray-600 mt-2 border-t border-gray-100 pt-3">Hotel berkonsep syariah dengan kamar modern dan bersih, cocok untuk rombongan keluarga kafilah.</p>
+                        </div>
+                    </div>
+                    <div class="mt-4 pt-3 border-t border-gray-100">
+                        <a href="https://www.google.com/maps/search/?api=1&query=Ganesha+Syariah+Hotel+Purworejo" target="_blank" class="inline-flex items-center text-xs font-bold text-indigo-600 bg-indigo-50 hover:bg-indigo-100 px-3 py-2 rounded-lg transition w-full justify-center">
+                            <i class="fas fa-map-marker-alt mr-2 text-indigo-500"></i> Buka Google Maps &rarr;
+                        </a>
+                    </div>
+                </div>
+                <!-- Item 4 -->
+                <div class="lomba-card bg-white p-6 rounded-2xl border border-gray-200 shadow-sm flex flex-col justify-between">
+                    <div class="flex items-start gap-4">
+                        <div class="bg-pink-100 text-pink-600 p-3 rounded-xl text-2xl"><i class="fas fa-hotel"></i></div>
+                        <div class="w-full">
+                            <h4 class="font-bold text-lg text-gray-800">Hotel Sanjaya Inn</h4>
+                            <p class="text-sm text-gray-600 mt-2 border-t border-gray-100 pt-3">Akomodasi dengan harga terjangkau namun memiliki fasilitas memadai dan parkir kendaraan yang luas.</p>
+                        </div>
+                    </div>
+                    <div class="mt-4 pt-3 border-t border-gray-100">
+                        <a href="https://www.google.com/maps/search/?api=1&query=Hotel+Sanjaya+Inn+Purworejo" target="_blank" class="inline-flex items-center text-xs font-bold text-pink-600 bg-pink-50 hover:bg-pink-100 px-3 py-2 rounded-lg transition w-full justify-center">
+                            <i class="fas fa-map-marker-alt mr-2 text-pink-500"></i> Buka Google Maps &rarr;
+                        </a>
+                    </div>
+                </div>
+                <!-- Item 5 -->
+                <div class="lomba-card bg-white p-6 rounded-2xl border border-gray-200 shadow-sm flex flex-col justify-between">
+                    <div class="flex items-start gap-4">
+                        <div class="bg-blue-100 text-blue-600 p-3 rounded-xl text-2xl"><i class="fas fa-city"></i></div>
+                        <div class="w-full">
+                            <h4 class="font-bold text-lg text-gray-800">Hotel Garuda Purworejo</h4>
+                            <p class="text-sm text-gray-600 mt-2 border-t border-gray-100 pt-3">Berlokasi dekat dengan stasiun Kutoarjo dan jalur utama, memudahkan mobilitas peserta dari luar daerah.</p>
+                        </div>
+                    </div>
+                    <div class="mt-4 pt-3 border-t border-gray-100">
+                        <a href="https://www.google.com/maps/search/?api=1&query=Hotel+Garuda+Kutoarjo+Purworejo" target="_blank" class="inline-flex items-center text-xs font-bold text-blue-600 bg-blue-50 hover:bg-blue-100 px-3 py-2 rounded-lg transition w-full justify-center">
+                            <i class="fas fa-map-marker-alt mr-2 text-blue-500"></i> Buka Google Maps &rarr;
+                        </a>
+                    </div>
+                </div>
+                <!-- Item 6 -->
+                <div class="lomba-card bg-white p-6 rounded-2xl border border-gray-200 shadow-sm flex flex-col justify-between">
+                    <div class="flex items-start gap-4">
+                        <div class="bg-teal-100 text-teal-600 p-3 rounded-xl text-2xl"><i class="fas fa-bed"></i></div>
+                        <div class="w-full">
+                            <h4 class="font-bold text-lg text-gray-800">Hotel Sawunggalih</h4>
+                            <p class="text-sm text-gray-600 mt-2 border-t border-gray-100 pt-3">Penginapan tenang dengan lingkungan asri yang cocok untuk beristirahat bagi ofisial dan pendamping.</p>
+                        </div>
+                    </div>
+                    <div class="mt-4 pt-3 border-t border-gray-100">
+                        <a href="https://www.google.com/maps/search/?api=1&query=Hotel+Sawunggalih+Kutoarjo" target="_blank" class="inline-flex items-center text-xs font-bold text-teal-600 bg-teal-50 hover:bg-teal-100 px-3 py-2 rounded-lg transition w-full justify-center">
+                            <i class="fas fa-map-marker-alt mr-2 text-teal-500"></i> Buka Google Maps &rarr;
+                        </a>
+                    </div>
+                </div>
+                <!-- Item 7 -->
+                <div class="lomba-card bg-white p-6 rounded-2xl border border-gray-200 shadow-sm flex flex-col justify-between">
+                    <div class="flex items-start gap-4">
+                        <div class="bg-rose-100 text-rose-600 p-3 rounded-xl text-2xl"><i class="fas fa-house-user"></i></div>
+                        <div class="w-full">
+                            <h4 class="font-bold text-lg text-gray-800">Graha Cempaka Guest House</h4>
+                            <p class="text-sm text-gray-600 mt-2 border-t border-gray-100 pt-3">Guest house eksklusif yang menawarkan kenyamanan serasa di rumah sendiri di tengah suasana kota.</p>
+                        </div>
+                    </div>
+                    <div class="mt-4 pt-3 border-t border-gray-100">
+                        <a href="https://www.google.com/maps/search/?api=1&query=Graha+Cempaka+Guest+House+Purworejo" target="_blank" class="inline-flex items-center text-xs font-bold text-rose-600 bg-rose-50 hover:bg-rose-100 px-3 py-2 rounded-lg transition w-full justify-center">
+                            <i class="fas fa-map-marker-alt mr-2 text-rose-500"></i> Buka Google Maps &rarr;
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= TAB: DENAH LOKASI ================= -->
+        <section id="denah" class="tab-content pt-4">
+            <div class="flex flex-col md:flex-row justify-between items-center mb-8 gap-4 border-b border-gray-200 pb-4">
+                <div>
+                    <h3 class="text-3xl font-extrabold text-gray-800">Denah & Peta Lokasi Lomba</h3>
+                    <p class="text-xs text-gray-500 mt-1">Visualisasi berkas denah lokasi venue & pembagian ruang perlombaan MAPSI SD 2026</p>
+                    <div class="w-16 h-1 bg-purple-600 mt-2 rounded-full"></div>
+                </div>
+                <button onclick="loginAdminDenah()" class="bg-gray-800 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-gray-700 transition shadow-sm">
+                    <i class="fas fa-lock mr-2"></i>Login Admin
+                </button>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <!-- Gambar 1 -->
+                <div class="bg-white rounded-2xl border border-gray-200 shadow-md overflow-hidden flex flex-col justify-between hover:shadow-lg transition">
+                    <div>
+                        <div class="bg-gradient-to-r from-purple-900 to-purple-800 text-white p-4">
+                            <span class="text-xs font-bold text-amber-300 uppercase tracking-wider block mb-1">Peta Kawasan Utama</span>
+                            <h4 class="font-bold text-lg leading-snug">1. Komplek Kantor Bupati & Pendopo</h4>
+                        </div>
+                        <div class="p-4 bg-gray-50 flex justify-center items-center">
+                            <!-- TAUTAN GOOGLE DRIVE: GAMBAR DENAH 1 -->
+                            <a href="LINK_DRIVE_DENAH_1" target="_blank" title="Klik untuk membuka di Google Drive" class="block w-full">
+                                <img src="https://placehold.co/600x400/f3e8ff/6b21a8?text=Klik+untuk+Buka+Denah+di+Drive" alt="Buka Denah 1" class="w-full h-auto rounded-lg border border-purple-200 hover:scale-[1.02] transition shadow-sm">
+                            </a>
+                        </div>
+                        <div class="p-5">
+                            <h5 class="font-semibold text-gray-800 text-sm mb-2"><i class="fas fa-info-circle text-purple-600 mr-1.5"></i> Cakupan Lomba:</h5>
+                            <ul class="text-xs text-gray-600 space-y-1 ml-4 list-disc">
+                                <li><strong>Pendopo Bupati:</strong> Menyanyi Duet Religi</li>
+                                <li><strong>Kompleks Kantor Bupati:</strong> Pengetahuan PAI & BTQ</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Gambar 2 -->
+                <div class="bg-white rounded-2xl border border-gray-200 shadow-md overflow-hidden flex flex-col justify-between hover:shadow-lg transition">
+                    <div>
+                        <div class="bg-gradient-to-r from-purple-900 to-purple-800 text-white p-4">
+                            <span class="text-xs font-bold text-amber-300 uppercase tracking-wider block mb-1">Denah Detail Venue</span>
+                            <h4 class="font-bold text-lg leading-snug">2. SMAN 7 Purworejo</h4>
+                        </div>
+                        <div class="p-4 bg-gray-50 flex justify-center items-center">
+                            <!-- TAUTAN GOOGLE DRIVE: GAMBAR DENAH 2 -->
+                            <a href="LINK_DRIVE_DENAH_2" target="_blank" title="Klik untuk membuka di Google Drive" class="block w-full">
+                                <img src="https://placehold.co/600x400/f3e8ff/6b21a8?text=Klik+untuk+Buka+Denah+di+Drive" alt="Buka Denah 2" class="w-full h-auto rounded-lg border border-purple-200 hover:scale-[1.02] transition shadow-sm">
+                            </a>
+                        </div>
+                        <div class="p-5">
+                            <h5 class="font-semibold text-gray-800 text-sm mb-2"><i class="fas fa-info-circle text-purple-600 mr-1.5"></i> Cakupan Lomba:</h5>
+                            <ul class="text-xs text-gray-600 space-y-1 ml-4 list-disc">
+                                <li><strong>Wisma Budaya:</strong> Seni Musik Rebana</li>
+                                <li><strong>Gedung Kelas:</strong> Kaligrafi, Khat, Komputer, Cerita</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Gambar 3 -->
+                <div class="bg-white rounded-2xl border border-gray-200 shadow-md overflow-hidden flex flex-col justify-between hover:shadow-lg transition">
+                    <div>
+                        <div class="bg-gradient-to-r from-purple-900 to-purple-800 text-white p-4">
+                            <span class="text-xs font-bold text-amber-300 uppercase tracking-wider block mb-1">Denah Detail Venue</span>
+                            <h4 class="font-bold text-lg leading-snug">3. SMPN 1 Purworejo & UMPWR</h4>
+                        </div>
+                        <div class="p-4 bg-gray-50 flex justify-center items-center">
+                            <!-- TAUTAN GOOGLE DRIVE: GAMBAR DENAH 3 -->
+                            <a href="LINK_DRIVE_DENAH_3" target="_blank" title="Klik untuk membuka di Google Drive" class="block w-full">
+                                <img src="https://placehold.co/600x400/f3e8ff/6b21a8?text=Klik+untuk+Buka+Denah+di+Drive" alt="Buka Denah 3" class="w-full h-auto rounded-lg border border-purple-200 hover:scale-[1.02] transition shadow-sm">
+                            </a>
+                        </div>
+                        <div class="p-5">
+                            <h5 class="font-semibold text-gray-800 text-sm mb-2"><i class="fas fa-info-circle text-purple-600 mr-1.5"></i> Cakupan Lomba:</h5>
+                            <ul class="text-xs text-gray-600 space-y-1 ml-4 list-disc">
+                                <li><strong>SMPN 1:</strong> Wudhu Salat, Tilawah, Khitobah</li>
+                                <li><strong>UMPWR Sucen:</strong> Hifdzil Qur'an, Macapat, Azan</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- ================= TAB: SK PANITIA ================= -->
+        <section id="sk" class="tab-content pt-4">
+            <div class="flex flex-col md:flex-row justify-between items-center mb-8 gap-4 border-b border-gray-200 pb-4">
+                <div>
+                    <h3 class="text-3xl font-extrabold text-gray-800">Surat Keputusan (SK)</h3>
+                    <div class="w-16 h-1 bg-purple-600 mt-2 rounded-full"></div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="bg-white p-5 rounded-xl border border-gray-200 shadow-sm flex flex-col justify-between gap-4">
+                    <div class="flex items-start gap-4">
+                        <div class="bg-red-100 text-red-600 p-3 rounded-lg text-2xl"><i class="fas fa-file-pdf"></i></div>
+                        <div>
+                            <h4 class="font-bold text-gray-800">SK Susunan Panitia INMAP</h4>
+                            <p class="text-xs text-gray-500 mt-1">Tersimpan di Google Drive</p>
+                        </div>
+                    </div>
+                    <div class="flex gap-2 mt-2 pt-4 border-t border-gray-100">
+                        <!-- TAUTAN GOOGLE DRIVE: SK PANITIA -->
+                        <a href="LINK_DRIVE_SK_PANITIA" target="_blank" class="flex-1 text-center bg-purple-50 text-purple-700 border border-purple-200 px-3 py-2 rounded-lg text-sm font-semibold hover:bg-purple-100 transition"><i class="fas fa-external-link-alt mr-1"></i> Buka Dokumen</a>
+                    </div>
+                </div>
+
+                <div class="bg-white p-5 rounded-xl border border-gray-200 shadow-sm flex flex-col justify-between gap-4">
+                    <div class="flex items-start gap-4">
+                        <div class="bg-red-100 text-red-600 p-3 rounded-lg text-2xl"><i class="fas fa-file-pdf"></i></div>
+                        <div>
+                            <h4 class="font-bold text-gray-800">SK Dewan Hakim / Juri</h4>
+                            <p class="text-xs text-gray-500 mt-1">Tersimpan di Google Drive</p>
+                        </div>
+                    </div>
+                    <div class="flex gap-2 mt-2 pt-4 border-t border-gray-100">
+                        <!-- TAUTAN GOOGLE DRIVE: SK HAKIM -->
+                        <a href="LINK_DRIVE_SK_HAKIM" target="_blank" class="flex-1 text-center bg-purple-50 text-purple-700 border border-purple-200 px-3 py-2 rounded-lg text-sm font-semibold hover:bg-purple-100 transition"><i class="fas fa-external-link-alt mr-1"></i> Buka Dokumen</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= TAB: UNDUHAN MATERI ================= -->
+        <section id="unduhan" class="tab-content pt-4">
+            <div class="flex flex-col md:flex-row justify-between items-center mb-8 gap-4 border-b border-gray-200 pb-4">
+                <div>
+                    <h3 class="text-3xl font-extrabold text-gray-800">Pusat Unduhan Materi</h3>
+                    <div class="w-16 h-1 bg-purple-600 mt-2 rounded-full"></div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="bg-white p-5 rounded-xl border border-gray-200 shadow-sm flex flex-col justify-between gap-4">
+                    <div class="flex items-start gap-4">
+                        <div class="bg-blue-100 text-blue-600 p-3 rounded-lg text-2xl"><i class="fas fa-file-word"></i></div>
+                        <div>
+                            <h4 class="font-bold text-gray-800">Petunjuk Teknis (Juknis)</h4>
+                            <p class="text-xs text-gray-500 mt-1">Tersimpan di Google Drive</p>
+                        </div>
+                    </div>
+                    <div class="flex gap-2 mt-2 pt-4 border-t border-gray-100">
+                        <!-- TAUTAN GOOGLE DRIVE: JUKNIS -->
+                        <a href="LINK_DRIVE_JUKNIS" target="_blank" class="flex-1 text-center bg-purple-50 text-purple-700 border border-purple-200 px-3 py-2 rounded-lg text-sm font-semibold hover:bg-purple-100 transition"><i class="fas fa-external-link-alt mr-1"></i> Buka Dokumen</a>
+                    </div>
+                </div>
+
+                <div class="bg-white p-5 rounded-xl border border-gray-200 shadow-sm flex flex-col justify-between gap-4">
+                    <div class="flex items-start gap-4">
+                        <div class="bg-green-100 text-green-600 p-3 rounded-lg text-2xl"><i class="fas fa-file-excel"></i></div>
+                        <div>
+                            <h4 class="font-bold text-gray-800">Blangko Penilaian Lomba</h4>
+                            <p class="text-xs text-gray-500 mt-1">Tersimpan di Google Drive</p>
+                        </div>
+                    </div>
+                    <div class="flex gap-2 mt-2 pt-4 border-t border-gray-100">
+                        <!-- TAUTAN GOOGLE DRIVE: BLANGKO -->
+                        <a href="LINK_DRIVE_BLANGKO" target="_blank" class="flex-1 text-center bg-purple-50 text-purple-700 border border-purple-200 px-3 py-2 rounded-lg text-sm font-semibold hover:bg-purple-100 transition"><i class="fas fa-external-link-alt mr-1"></i> Buka Dokumen</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-white border-t border-gray-200 mt-auto">
+        <div class="container mx-auto px-4 py-6 text-center">
+            <p class="text-sm text-gray-600 font-medium">&copy; 2026 Aplikasi INMAP.</p>
+            <p class="text-xs text-gray-400 mt-1 mb-4">Kabupaten Purworejo BERIRAMA (Bersih, Indah, Rapi, Aman, Makmur)</p>
+            <div class="inline-flex items-center justify-center px-4 py-1.5 rounded-full bg-purple-50 text-purple-800 text-xs font-semibold border border-purple-100 shadow-sm">
+                <i class="fas fa-code mr-2"></i> Dikembangkan oleh Arwanul Mahyum
+            </div>
+        </div>
+    </footer>
+
+    <!-- Script Logika Tab & Admin -->
+    <script>
+        let isAdmin = false;
+
+        function switchTab(tabId) {
+            const tabs = document.querySelectorAll('.tab-content');
+            tabs.forEach(tab => tab.classList.remove('active'));
+
+            const navItems = document.querySelectorAll('.nav-item');
+            navItems.forEach(nav => nav.classList.remove('nav-active'));
+
+            const selectedTab = document.getElementById(tabId);
+            if (selectedTab) selectedTab.classList.add('active');
+
+            const activeNav = document.getElementById('nav-' + tabId);
+            if (activeNav) activeNav.classList.add('nav-active');
+            
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Validasi PIN Admin (PIN: 2627)
+        function promptAdmin() {
+            if (isAdmin) return true; 
+            const pin = prompt("Masukkan PIN Admin (Tahun):");
+            if (pin === "2627") {
+                isAdmin = true;
+                alert("Verifikasi berhasil. Anda masuk sebagai Administrator.");
+                return true;
+            } else if (pin !== null && pin !== "") {
+                alert("Akses Ditolak: PIN yang Anda masukkan salah!");
+            }
+            return false;
+        }
+
+        function loginAdminPDF() {
+            if (promptAdmin()) {
+                const adminPanelPDF = document.getElementById('admin-panel-pdf');
+                adminPanelPDF.classList.remove('hidden');
+                adminPanelPDF.classList.add('flex');
+            }
+        }
+        
+        function loginAdminPemondokan() {
+            if (promptAdmin()) {
+                const panel = document.getElementById('admin-panel-pemondokan');
+                panel.classList.remove('hidden');
+                panel.classList.add('flex');
+            }
+        }
+
+        function loginAdminDenah() {
+            if (promptAdmin()) {
+                alert("Sebagai admin, silahkan masuk ke akun Google Drive yang menjadi pusat penyimpanan (Host) file-file denah untuk memperbarui gambar secara langsung.");
+            }
+        }
+
+        function toggleEditPengumuman() {
+            if (promptAdmin()) {
+                const viewDiv = document.getElementById('pengumuman-view');
+                const editDiv = document.getElementById('pengumuman-edit');
+                const inputEl = document.getElementById('pengumuman-input');
+                
+                inputEl.value = viewDiv.innerText;
+                viewDiv.classList.add('hidden');
+                editDiv.classList.remove('hidden');
+            }
+        }
+
+        function cancelEditPengumuman() {
+            document.getElementById('pengumuman-view').classList.remove('hidden');
+            document.getElementById('pengumuman-edit').classList.add('hidden');
+        }
+
+        function savePengumuman() {
+            const viewDiv = document.getElementById('pengumuman-view');
+            const editDiv = document.getElementById('pengumuman-edit');
+            const inputEl = document.getElementById('pengumuman-input');
+            
+            viewDiv.innerText = inputEl.value;
+            viewDiv.classList.remove('hidden');
+            editDiv.classList.add('hidden');
+        }
+    </script>
+</body>
+</html>
